@@ -71,16 +71,19 @@ def __checknginxstatus():
     if len(nginx_pid) < 1:
         logger.info("nginx 服务异常,重启nginx服务")
         os.popen("systemctl restart nginx")
+    else:
+        logger.info("nginx服务正常")
 
 
 def main():
     logger.info("===========启动健康检查脚本=============")
-    logger.info("===========检查claim2.0================")
+    logger.info("=检查claim2.0 :")
     __checkclaim2webstatus()
-    logger.info("===========检查claim1.0================")
+    logger.info("=检查claim1.0 :")
     __checkclaimwebstatus()
-    logger.info("===========检查nginx ================")
+    logger.info("=检查nginx :")
     __checknginxstatus()
+    logger.info("===========本次检查结束=============")
 
 
 if __name__ == '__main__':
