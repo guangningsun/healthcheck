@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests,logging
 import sys
 import os
@@ -65,6 +67,31 @@ def __checkclaimwebstatus():
                 os.system("kill -9 %s" % (pid.replace("\n", "")))
         logger.info("重启claim1.0")
         os.popen("nohup python /opt/production/claim/server/manage.py runserver_plus --cert /home/ssl/server.crt 0.0.0.0:8015 >> /opt/production/claim/server/output.log 2>&1 &")
+
+
+def __checkinfowebstatus():
+    url='https://brilliantlife.com.cn:8017/admin/login/?next=/admin/'
+    code = 0
+    try:
+        r=requests.get(url,timeout=5)
+        # 获取访问infopub网站状态
+        code = r.status_code
+    except:
+        logger.info("网站访问异常无法获取code码")
+    # 获取infopub进程pid
+    pid_list = os.popen("ps -ef |grep 8017|grep python |grep -v grep|awk '{print $2}'").readlines()
+    if code == 200:
+        logger.info('OK infopub网站访问正常')
+    else:
+        logger.info("infopub 网站访问异常，杀掉infopub后台进程")
+        for pid in pid_list:
+            print ("该次脚本进程为 %s " % (os.getpid()))
+            if int(pid) != int(os.getpid()):
+                logger.info("杀掉infopub进程 %s" % (pid.replace("\n", "")))
+                os.system("kill -9 %s" % (pid.replace("\n", "")))
+        logger.info("重启infopub")
+        os.popen("nohup python /opt/production/infopubsys/server/manage.py runserver_plus --cert /home/ssl/server.crt 0.0.0.0:8017 >> /opt/production/infopubsys/server/output.log 2>&1 &")
+
 
 def __checknginxstatus():
     nginx_pid = os.popen("systemctl status nginx |grep running").readlines()
