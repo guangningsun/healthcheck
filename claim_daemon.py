@@ -108,6 +108,8 @@ def main():
     __checkclaim2webstatus()
     logger.info("=检查claim1.0 :")
     __checkclaimwebstatus()
+    logger.info("=检查infopub :")
+    __checkinfowebstatus()
     logger.info("=检查nginx :")
     __checknginxstatus()
     logger.info("===========本次检查结束=============")
